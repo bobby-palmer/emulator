@@ -8,29 +8,26 @@
 
 using std::byte;
 
-enum addressMode {
-  immediate,
-  zeroPage,
-  zeroPageX,
-  zeroPageY,
-  absolute,
-  absX,
-  absY,
-  indirectX,
-  indirectY,
-};
-
 class cpu {
   uint16_t pc;
-  byte status;
   byte     sp;
   byte      a;
   byte      x;
   byte      y;
+
   bus&    mem;
+
+  bool c;
+  bool z;
+  bool i;
+  bool d;
+  bool b;
+  bool v;
+  bool n;
+
 public:
 
   void reset();
 
-  uint16_t get_address(addressMode m);
+  void do_op();
 };
