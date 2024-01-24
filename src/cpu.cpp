@@ -92,9 +92,56 @@ void cpu::AND(byte b) {
 void cpu::ORA(byte b) {
   a |= b;
   flagZN(a);
-}
+};
 // exclusive or memory with accumulator
 void cpu::EOR(byte b) {
   a ^= b;
   flagZN(a);
-}
+};
+
+// increment and decremement
+// increment x
+void cpu::INX() {
+  ++x;
+  flagZN(x);
+};
+// increment y
+void cpu::INY() {
+  ++y;
+  flagZN(y);
+};
+void cpu::DEX() {
+  --x;
+  flagZN(x);
+};
+void cpu::DEY() {
+  --y;
+  flagZN(y);
+};
+// increment memory
+void cpu::INC(byte& b) {
+  ++b;
+  flagZN(b);
+};
+void cpu::DEC(byte& b) {
+  --b;
+  flagZN(b);
+};
+
+// byte comparisons
+// compare memory with acc
+void cpu::CMP(byte b) {
+  c = a >= b;
+  byte sub = a - b;
+  flagZN(sub);
+};
+void cpu::CPX(byte b) {
+  c = x >= b;
+  byte sub = x - b;
+  flagZN(sub);
+};
+void cpu::CPY(byte b) {
+  c = y >= b;
+  byte sub = y - b;
+  flagZN(sub);
+};
