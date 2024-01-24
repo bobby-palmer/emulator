@@ -1,8 +1,25 @@
 #include "../include/cpu.h"
 
+// master do operation function
+// will perform the operation at pc
+void cpu::do_op() {
+  switch (mem.read(pc++)) {
+    case 0x69: return ADC(immediate());
+    case 0x65: return ADC(zero_page());
+    case 0x75: return ADC(zero_page_x());
+    case 0x6D: return ADC(absolute());
+    case 0x7D: return ADC(absolute_x());
+    case 0x79: return ADC(absolute_y());
+    case 0x61: return ADC(indirect_x());
+    case 0x71: return ADC(indirect_y());
+  }
+};
+
+const uint16_t RESET_VECTOR = 0xFFFC;
+const uint16_t BRK_VECTOR = 0xFFFE;
+
 void cpu::reset() {
   i = true;
-  const uint16_t RESET_VECTOR = 0xFFFC;
   pc = mem.read16(RESET_VECTOR);
 };
 
@@ -182,8 +199,8 @@ void cpu::ROR(byte& b) {
 
 // branching
 // jump to new location
-void cpu::JMP(uint16_t loc) {
-  pc = loc;
+void cpu::JMP(uint16_t address) {
+  pc = address;
 };
 // branch minus
 void cpu::BMI(int8_t off) {
@@ -213,11 +230,11 @@ void cpu::BNE(int8_t off) {
 
 // call stack managment
 // jump and save return addy
-void cpu::JSR(uint16_t addy) {
+void cpu::JSR(uint16_t address) {
   --s;
   mem.write16(s, pc);
   --s;
-  pc = addy;
+  pc = address;
 };
 // return
 void cpu::RTS() {
@@ -268,7 +285,6 @@ void cpu::BRK() {
   mem.write16(s, pc);
   --s;
   PHP();
-  const BRK_VECTOR = 0xFFFE;
   pc = mem.read16(BRK_VECTOR);
   i = true;
 };
