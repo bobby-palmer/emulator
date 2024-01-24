@@ -45,29 +45,56 @@ void cpu::STX(byte& b) { b = x; };
 void cpu::STY(byte& b) { b = y; };
 // transfer accumulator to regsiter x
 void cpu::TAX() {
-  flagZero(a);
-  flagNegative(a);
+  flagZN(a);
   x = a;
 };
 // transfer accumulator to register y
 void cpu::TAY() {
-  flagZero(a);
-  flagNegative(a);
+  flagZN(a);
   y = a;
 };
 // transfer x to accumulator
 void cpu::TXA() {
-  flagZero(x);
-  flagNegative(x);
+  flagZN(x);
   a = x;
 };
 // transfer y to accumulator
 void cpu::TYA() {
-  flagZero(y);
-  flagNegative(y);
+  flagZN(y);
   a = y;
 };
 // transfer reg x to the stack pointer
 void cpu::TXS() { s = x; };
 // transfer stack pointer to the reg x
 void cpu::TSX() { x = s; };
+
+// add/sub functions
+// add with carry
+void cpu::ADC(byte b) {
+  uint16_t sum = a + b + c;
+  flagCarry(sum); 
+  flagZN(sum);
+  v = ~(a ^ b) & (a ^ sum) & 0x80; // flag on overflow
+  a = sum;
+};
+// sub with borrow
+void cpu::SBC(byte b) {
+  ADC(~b + 1);
+};
+
+// bitwise
+// and memory with accumulator
+void cpu::AND(byte b) {
+  a &= b;
+  flagZN(a);
+};
+// or memory with accumulator
+void cpu::ORA(byte b) {
+  a |= b;
+  flagZN(a);
+}
+// exclusive or memory with accumulator
+void cpu::EOR(byte b) {
+  a ^= b;
+  flagZN(a);
+}

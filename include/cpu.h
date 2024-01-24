@@ -29,8 +29,10 @@ class cpu {
   void reset();
 
   // flag checking functions
-  void flagZero(byte b);
+  void flagZero    (byte b);
   void flagNegative(byte b);
+  void flagZN      (byte b);
+  void flagCarry   (uint16_t val);
 
   // operations
   void ADC(byte  arg);
