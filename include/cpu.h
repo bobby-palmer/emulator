@@ -28,6 +28,10 @@ class cpu {
   // general functions
   void reset();
 
+  // flag checking functions
+  void flagZero(byte b);
+  void flagNegative(byte b);
+
   // operations
   void ADC(byte  arg);
   void AND(byte  arg);
@@ -58,7 +62,7 @@ class cpu {
   void INY();
   void JMP();
   void JSR();
-  void LDA();
+  void LDA(byte b);
   void LDX();
   void LDY();
   void LSR();
@@ -87,9 +91,6 @@ class cpu {
   void TYA();
 
   // Addressing
-
-
-  // flag setting
 
 public:
 };
