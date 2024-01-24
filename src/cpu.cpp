@@ -1,7 +1,9 @@
 #include "../include/cpu.h"
 
 void cpu::reset() {
-
+  i = true;
+  const uint16_t RESET_VECTOR = 0xFFFC;
+  pc = mem.read16(RESET_VECTOR);
 };
 
 // Flag commands
@@ -21,20 +23,17 @@ void cpu::SED() { d = true; };
 // ops for transfering data
 // load accumulator with memory
 void cpu::LDA(byte b) {
-  flagZero(b);
-  flagNegative(b);
+  flagZN(b);
   a = b;
 };
 // load index register x from memory
 void cpu::LDX(byte b) {
-  flagZero(b);
-  flagNegative(b);
+  flagZN(b);
   x = b;
 };
 // load index regiuster y from memory
 void cpu::LDY(byte b) {
-  flagZero(b);
-  flagNegative(b);
+  flagZN(b);
   y = b;
 };
 // store accumulator in memory
@@ -145,3 +144,132 @@ void cpu::CPY(byte b) {
   byte sub = y - b;
   flagZN(sub);
 };
+
+// bit manip
+// test and of acc and byte
+void cpu::BIT(byte b) {
+  byte t = a & b;
+  flagZN(t);
+  v = t & (1 << 6);
+};
+// right shift
+void cpu::LSR(byte& b) {
+  c = b & 0x01;
+  b >>= 1;
+  flagZN(b);
+};
+// left shift
+void cpu::ASL(byte& b) {
+  c = b & 0x80;
+  b <<= 1;
+  flagZN(b);
+};
+// rotate left
+void cpu::ROL(byte& b) {
+  bool new_carry = b & 0x80;
+  b <<= 1;
+  b |= c;
+  c = new_carry;
+  flagZN(b);
+};
+// rotate right
+void cpu::ROR(byte& b) {
+  bool new_carry = b & 0x01;
+  b >>= 1;
+  b |= (byte(c) << 7);
+  c = new_carry;
+};
+
+// branching
+// jump to new location
+void cpu::JMP(uint16_t loc) {
+  pc = loc;
+};
+// branch minus
+void cpu::BMI(int8_t off) {
+  if (n) pc += off;
+};
+void cpu::BPL(int8_t off) {
+  if (!n) pc += off;
+};
+void cpu::BVS(int8_t off) {
+  if (v) pc += off;
+};
+void cpu::BVC(int8_t off) {
+  if (!v) pc += off;
+};
+void cpu::BCS(int8_t off) {
+  if (c) pc += off;
+};
+void cpu::BCC(int8_t off) {
+  if (!c) pc += off;
+};
+void cpu::BEQ(int8_t off) {
+  if (z) pc += off;
+};
+void cpu::BNE(int8_t off) {
+  if (!z) pc += off;
+};
+
+// call stack managment
+// jump and save return addy
+void cpu::JSR(uint16_t addy) {
+  --s;
+  mem.write16(s, pc);
+  --s;
+  pc = addy;
+};
+// return
+void cpu::RTS() {
+  ++s;
+  pc = mem.read16(s);
+  ++s;
+};
+void cpu::PHA() {
+  mem.write(s, a);
+  --s;
+};
+void cpu::PHP() {
+  byte status = (
+    c * 1 +
+    z * (1 << 1) +
+    i * (1 << 2) +
+    d * (1 << 3) +
+    b * (1 << 4) +
+    v * (1 << 6) +
+    n * (1 << 7)
+  );
+  mem.write(s, status);
+  --s;
+};
+void cpu::PLA() {
+  --s;
+  a = mem.read(s);
+};
+void cpu::PLP() {
+  --s;
+  byte stat = mem.read(s);
+  c = stat & 1;
+  z = stat & (1 << 1);
+  i = stat & (1 << 2);
+  d = stat & (1 << 3);
+  b = stat & (1 << 4);
+  v = stat & (1 << 6);
+  n = stat & (1 << 7);
+};
+
+// interupt
+void cpu::RTI() {
+  PLP();
+  RTS();
+};
+void cpu::BRK() {
+  --s;
+  mem.write16(s, pc);
+  --s;
+  PHP();
+  const BRK_VECTOR = 0xFFFE;
+  pc = mem.read16(BRK_VECTOR);
+  i = true;
+};
+void cpu::NOP() {  };
