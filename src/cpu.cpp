@@ -29,10 +29,18 @@ void cpu::do_op() {
     case 0x1E: return ASL(absolute_x());
 
     case 0x90: return BCC(relative());
-
     case 0xB0: return BCS(relative());
-
     case 0xF0: return BEQ(relative());
+
+    case 0x24: return BIT(zero_page());
+    case 0x2C: return BIT(absolute());
+
+    case 0x30: return BMI(relative());
+    case 0xD0: return BNE(relative());
+    case 0x10: return BPL(relative());
+    case 0x00: return BRK();
+    case 0x50: return BVC(relative());
+    case 0x70: return BVS(relative());
   };
 };
 
