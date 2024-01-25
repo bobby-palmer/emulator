@@ -27,6 +27,12 @@ void cpu::do_op() {
     case 0x16: return ASL(zero_page_x());
     case 0x0E: return ASL(absolute());
     case 0x1E: return ASL(absolute_x());
+
+    case 0x90: return BCC(relative());
+
+    case 0xB0: return BCS(relative());
+
+    case 0xF0: return BEQ(relative());
   };
 };
 
