@@ -3,7 +3,15 @@
 // master do operation function
 // will perform the operation at pc
 void cpu::do_op() {
-  switch (mem.read(pc++)) {
+  switch (read_pc()) {
+    case 0x69: return ADC(immediate());
+    case 0x65: return ADC(zero_page());
+    case 0x75: return ADC(zero_page_x());
+    case 0x6D: return ADC(absolute());
+    case 0x7D: return ADC(absolute_x());
+    case 0x79: return ADC(absolute_y());
+    case 0x61: return ADC(indirect_x());
+    case 0x71: return ADC(indirect_y());
   };
 };
 

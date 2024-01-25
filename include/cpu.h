@@ -5,7 +5,6 @@
 #include <iostream>
 
 #include "bus.h"
-#include "opcodes.h"
 
 typedef unsigned char byte;
 
@@ -29,6 +28,13 @@ class cpu {
   // general functions
   void reset();
   void do_op();
+
+  // mem function forwards
+  byte read_pc();
+  uint16_t read_pc16();
+
+  byte read_stack();
+  uint16_t read_stack16();
 
   // flag checking functions
   void flagZero    (byte b);
