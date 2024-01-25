@@ -30,10 +30,14 @@ class cpu {
   void do_op();
 
   // mem function forwards
-  byte read_pc();
-  uint16_t read_pc16();
+  byte read_pc() { return mem.read(pc++); };
+  uint16_t read_pc16() { 
+    auto temp = mem.read16(pc);
+    pc = pc + 2;
+    return temp;
+  };
 
-  byte read_stack();
+  byte pop_stack() { return mem.read(--s); };
   uint16_t read_stack16();
 
   // flag checking functions

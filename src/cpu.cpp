@@ -12,6 +12,15 @@ void cpu::do_op() {
     case 0x79: return ADC(absolute_y());
     case 0x61: return ADC(indirect_x());
     case 0x71: return ADC(indirect_y());
+
+    case 0x29: return AND(immediate());
+    case 0x25: return AND(zero_page());
+    case 0x35: return AND(zero_page_x());
+    case 0x2D: return AND(absolute());
+    case 0x3D: return AND(absolute_x());
+    case 0x39: return AND(absolute_y());
+    case 0x21: return AND(indirect_x());
+    case 0x31: return AND(indirect_y());
   };
 };
 
