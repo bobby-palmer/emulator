@@ -41,6 +41,12 @@ void cpu::do_op() {
     case 0x00: return BRK();
     case 0x50: return BVC(relative());
     case 0x70: return BVS(relative());
+
+    case 0x18: return CLC();
+    case 0xD8: return CLD();
+    case 0x58: return CLI();
+    case 0xB8: return CLV();
+  
   };
 };
 
