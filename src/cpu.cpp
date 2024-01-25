@@ -21,6 +21,12 @@ void cpu::do_op() {
     case 0x39: return AND(absolute_y());
     case 0x21: return AND(indirect_x());
     case 0x31: return AND(indirect_y());
+
+    case 0x0A: return ASL(accumulator());
+    case 0x06: return ASL(zero_page());
+    case 0x16: return ASL(zero_page_x());
+    case 0x0E: return ASL(absolute());
+    case 0x1E: return ASL(absolute_x());
   };
 };
 
