@@ -1,4 +1,5 @@
 #include "../include/cpu.h"
+#include <cstdlib>
 
 // master do operation function
 // will perform the operation at pc
@@ -47,6 +48,59 @@ void cpu::do_op() {
     case 0x58: return CLI();
     case 0xB8: return CLV();
   
+    case 0xC9: return CMP(immediate());
+    case 0xC5: return CMP(zero_page());
+    case 0xD5: return CMP(zero_page_x());
+    case 0xCD: return CMP(absolute());
+    case 0xDD: return CMP(absolute_x());
+    case 0xD9: return CMP(absolute_y());
+    case 0xC1: return CMP(indirect_x());
+    case 0xD1: return CMP(indirect_y());
+
+    case 0xE0: return CPX(immediate());
+    case 0xE4: return CPX(zero_page());
+    case 0xEC: return CPX(absolute());
+
+    case 0xC0: return CPY(immediate());
+    case 0xC4: return CPY(zero_page());
+    case 0xCC: return CPY(absolute());
+
+    case 0xC6: return DEC(zero_page());
+    case 0xD6: return DEC(zero_page_x());
+    case 0xCE: return DEC(absolute());
+    case 0xDE: return DEC(absolute_x());
+
+    case 0xCA: return DEX();
+    case 0x88: return DEY();
+
+    case 0x49: return EOR(immediate());
+    case 0x45: return EOR(zero_page());
+    case 0x55: return EOR(zero_page_x());
+    case 0x4D: return EOR(absolute());
+    case 0x5D: return EOR(absolute_x());
+    case 0x59: return EOR(absolute_y());
+    case 0x41: return EOR(indirect_x());
+    case 0x51: return EOR(indirect_y());
+
+    case 0xE6: return INC(zero_page());
+    case 0xF6: return INC(zero_page_x());
+    case 0xEE: return INC(absolute());
+    case 0xFE: return INC(absolute_x());
+
+    case 0xE8: return INX();
+    case 0xC8: return INY();
+
+    case 0x4C: return JMP(abs);
+    case 0x6C: return JMP(indirect);
+
+    case 0x20: return JSR(abs);
+
+    case 0xA9: return LDA(immediate());
+    case 0xA5: return LDA(zero_page());
+    case 0xB5: return LDA(zero_page_x());
+    case 0xAD: return LDA(absolute());
+    case 0xBD: return LDA(absolute_x());
+    case 0xB9: return LDA(absolute_y())
   };
 };
 
