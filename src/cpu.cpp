@@ -4,15 +4,7 @@
 // will perform the operation at pc
 void cpu::do_op() {
   switch (mem.read(pc++)) {
-    case 0x69: return ADC(immediate());
-    case 0x65: return ADC(zero_page());
-    case 0x75: return ADC(zero_page_x());
-    case 0x6D: return ADC(absolute());
-    case 0x7D: return ADC(absolute_x());
-    case 0x79: return ADC(absolute_y());
-    case 0x61: return ADC(indirect_x());
-    case 0x71: return ADC(indirect_y());
-  }
+  };
 };
 
 const uint16_t RESET_VECTOR = 0xFFFC;
@@ -270,7 +262,7 @@ void cpu::PLP() {
   z = stat & (1 << 1);
   i = stat & (1 << 2);
   d = stat & (1 << 3);
-  b = stat & (1 << 4);
+  b = stat & (0 << 4);
   v = stat & (1 << 6);
   n = stat & (1 << 7);
 };

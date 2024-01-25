@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include "bus.h"
+#include "opcodes.h"
 
 typedef unsigned char byte;
 
