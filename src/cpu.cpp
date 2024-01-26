@@ -100,7 +100,7 @@ void cpu::do_op() {
     case 0xB5: return LDA(zero_page_x());
     case 0xAD: return LDA(absolute());
     case 0xBD: return LDA(absolute_x());
-    case 0xB9: return LDA(absolute_y())
+    case 0xB9: return LDA(absolute_y());
   };
 };
 
