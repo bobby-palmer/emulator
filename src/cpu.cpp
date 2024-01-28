@@ -4,7 +4,8 @@
 // master do operation function
 // will perform the operation at pc
 void cpu::do_op() {
-  switch (read_pc()) {
+  auto op = read_pc();
+  switch (op) {
     case 0x69: return ADC(immediate());
     case 0x65: return ADC(zero_page());
     case 0x75: return ADC(zero_page_x());
@@ -101,6 +102,108 @@ void cpu::do_op() {
     case 0xAD: return LDA(absolute());
     case 0xBD: return LDA(absolute_x());
     case 0xB9: return LDA(absolute_y());
+    case 0xA1: return LDA(indirect_x());
+    case 0xB1: return LDA(indirect_y());
+
+    case 0xA2: return LDX(immediate());
+    case 0xA6: return LDX(zero_page());
+    case 0xB6: return LDX(zero_page_y());
+    case 0xAE: return LDX(absolute());
+    case 0xBE: return LDA(absolute_y());
+
+    case 0xA0: return LDY(immediate());
+    case 0xA4: return LDY(zero_page());
+    case 0xB4: return LDY(zero_page_x());
+    case 0xAC: return LDY(absolute());
+    case 0xBC: return LDY(absolute_x());
+
+    case 0x4A: return LSR(accumulator());
+    case 0x46: return LSR(zero_page());
+    case 0x56: return LSR(zero_page_x());
+    case 0x4E: return LSR(absolute());
+    case 0x5E: return LSR(absolute_x());
+
+    case 0xEA: return NOP();
+
+    case 0x09: return ORA(immediate());
+    case 0x05: return ORA(zero_page());
+    case 0x15: return ORA(zero_page_x());
+    case 0x0D: return ORA(absolute());
+    case 0x1D: return ORA(absolute_x());
+    case 0x19: return ORA(absolute_y());
+    case 0x01: return ORA(indirect_x());
+    case 0x11: return ORA(indirect_y());
+
+    case 0x48: return PHA();
+    
+    case 0x08: return PHP();
+
+    case 0x68: return PLA();
+
+    case 0x28: return PLP();
+
+    case 0x2A: return ROL(accumulator());
+    case 0x26: return ROL(zero_page());
+    case 0x36: return ROL(zero_page_x());
+    case 0x2E: return ROL(absolute());
+    case 0x3E: return ROL(absolute_x());
+
+    case 0x6A: return ROR(accumulator());
+    case 0x66: return ROR(zero_page());
+    case 0x76: return ROR(zero_page_x());
+    case 0x6E: return ROR(absolute());
+    case 0x7E: return ROR(absolute_x());
+
+    case 0x40: return RTI();
+
+    case 0x60: return RTS();
+
+    case 0xE9: return SBC(immediate());
+    case 0xE5: return SBC(zero_page());
+    case 0xF5: return SBC(zero_page_x());
+    case 0xED: return SBC(absolute());
+    case 0xFD: return SBC(absolute_x());
+    case 0xF9: return SBC(absolute_y());
+    case 0xE1: return SBC(indirect_x());
+    case 0xF1: return SBC(indirect_y());
+
+    case 0x38: return SEC();
+    
+    case 0xF8: return SED();
+    
+    case 0x78: return SEI();
+
+    case 0x85: return STA(zero_page());
+    case 0x95: return STA(zero_page_x());
+    case 0x8D: return STA(absolute());
+    case 0x9D: return STA(absolute_x());
+    case 0x99: return STA(absolute_y());
+    case 0x81: return STA(indirect_x());
+    case 0x91: return STA(indirect_y());
+
+    case 0x86: return STX(zero_page());
+    case 0x96: return STX(zero_page_y());
+    case 0x8E: return STX(absolute());
+
+    case 0x84: return STY(zero_page());
+    case 0x94: return STY(zero_page_x());
+    case 0x8c: return STY(absolute());
+
+    case 0xAA: return TAX();
+
+    case 0xA8: return TAY();
+
+    case 0xBA: return TSX();
+
+    case 0x8A: return TXA();
+
+    case 0x9A: return TXS();
+
+    case 0x98: return TYA();
+
+    default:
+      std::fprintf(stderr, "ERROR: opcode %.4x is not implemented\n", op);
+      std::exit(1); 
   };
 };
 
