@@ -91,10 +91,10 @@ void cpu::do_op() {
     case 0xE8: return INX();
     case 0xC8: return INY();
 
-    case 0x4C: return JMP(abs);
-    case 0x6C: return JMP(indirect);
+    case 0x4C: return JMP(absolute_address());
+    case 0x6C: return JMP(indirect_address());
 
-    case 0x20: return JSR(abs);
+    case 0x20: return JSR(absolute_address());
 
     case 0xA9: return LDA(immediate());
     case 0xA5: return LDA(zero_page());
@@ -212,7 +212,10 @@ const uint16_t BRK_VECTOR = 0xFFFE;
 
 void cpu::reset() {
   i = true;
+  d = false;
+  b = true;
   pc = mem.read16(RESET_VECTOR);
+  s = STACK_RESET;
 };
 
 // Flag commands
@@ -481,3 +484,77 @@ void cpu::BRK() {
   i = true;
 };
 void cpu::NOP() {  };
+
+// addressing functions
+byte& cpu::accumulator() { 
+  return a; 
+};
+
+byte& cpu::immediate  () {
+  return read_pc(); 
+};
+
+byte& cpu::absolute   () {
+  auto address = read_pc16();
+  return read(address);
+};
+
+byte& cpu::zero_page  () { 
+  return read(read_pc()); 
+};
+
+byte& cpu::zero_page_x() {
+  return read(zero_page() + x);
+};
+
+byte& cpu::zero_page_y() {
+  return read(read_pc() + y);
+};
+
+byte& cpu::absolute_x () {
+  return read(x + read_pc16());
+};
+
+byte& cpu::absolute_y () {
+  return read(y + read_pc16());
+};
+
+byte& cpu::indirect_x () {
+  auto address = read16(read_pc() + x);
+  return read(address);
+};
+
+byte& cpu::indirect_y () {
+  auto address = read16(read_pc()) + y;
+  return read(address);
+};
+
+byte& cpu::relative () {
+  return read_pc();
+};
+
+uint16_t cpu::absolute_address () {
+  return read_pc16();
+};
+
+uint16_t cpu::indirect_address () {
+  auto addy = read_pc16();
+  return read16(addy);
+};
+
+cpu::cpu() {
+  reset(); 
+};
+
+void cpu::load(std::vector<byte> &program) {
+  mem.copy(program, 0x0600); 
+  mem.write16(RESET_VECTOR, 0x0600);
+};
+
+template<typename T>
+void cpu::run(T callback) {
+  while (true) {
+    callback(this);
+    do_op();
+  }
+};

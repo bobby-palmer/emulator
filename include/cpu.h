@@ -8,29 +8,33 @@
 
 typedef unsigned char byte;
 
+const uint16_t STACK_RESET = 0xFD;
+
 class cpu {
   uint16_t pc; // program counter
   byte     s;  // stack pointer
-  byte     a;  // accumulator
-  byte     x;  // register x
-  byte     y;  // register y
+  byte     a = 0;  // accumulator
+  byte     x = 0;  // register x
+  byte     y = 0;  // register y
 
-  bus&    mem;
+  bus    mem;
 
-  bool c; // carry
-  bool z; // zero result
-  bool i; // interupt disable
-  bool d; // decimal mode
-  bool b; // break
-  bool v; // overflow
-  bool n; // negative result
+  bool c = true; // carry
+  bool z = true; // zero result
+  bool i = true; // interupt disable
+  bool d = true; // decimal mode
+  bool b = true; // break
+  bool v = true; // overflow
+  bool n = true; // negative result
 
   // general functions
   void reset();
   void do_op();
 
   // mem function forwards
-  byte read_pc() { return mem.read(pc++); };
+  byte& read(uint16_t address) { return mem.read(address); };
+  uint16_t read16(uint16_t address) { return mem.read16(address); };
+  byte& read_pc() { return mem.read(pc++); };
   uint16_t read_pc16() { 
     auto temp = mem.read16(pc);
     pc = pc + 2;
@@ -38,7 +42,10 @@ class cpu {
   };
 
   byte pop_stack() { return mem.read(--s); };
-  uint16_t read_stack16();
+  uint16_t read_stack16() {
+    --s;
+    return read16(s--);
+  };
 
   // flag checking functions
   void flagZero    (byte b);
@@ -116,8 +123,17 @@ class cpu {
   byte& indirect_x ();
   byte& indirect_y ();
   byte& relative   ();
-  byte& absolute_indirect();
+
+  uint16_t absolute_address ();
+  uint16_t indirect_address ();
 
 public:
+
+  cpu();
+
+  void load(std::vector<byte> &program);
+
+  template<typename T>
+  void run(T callback);
 };
 
