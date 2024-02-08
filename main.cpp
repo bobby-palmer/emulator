@@ -1,12 +1,6 @@
-#include "include/cpu.h"
-#include <vector>
+#include "cpu.h"
 
-std::vector<byte> v = {
+#include "<fstream>"
 
-};
-
-int main() {
-  cpu c;
-  c.load(v);
-  c.run();
+int main(int argc, char* argv[]) {
 }
